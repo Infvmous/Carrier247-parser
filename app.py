@@ -25,6 +25,11 @@ def unpack(response):
     return response.json()['response']['results'][0]['carrier_name']
 
 
+def write_json(dictionary):
+    with open('response.json', 'w') as outfile:
+        json.dump(dictionary, outfile, indent=4)
+
+
 def fill_dictionary(dictionary, carrier_name, phone_number):
     if carrier_name not in dictionary:
         dictionary.setdefault(carrier_name, [])
@@ -39,7 +44,7 @@ def request(url, phone_number):
     return carrier_name
 
 
-def parse(dictionary, url):
+def parse_file(dictionary, url):
     for number in open('numbers.txt', 'r'):
         formatted_number = format_number(number)
         if formatted_number:
@@ -49,19 +54,14 @@ def parse(dictionary, url):
             print(dictionary)
 
 
-def write_json(dictionary):
-    with open('response.json', 'w') as outfile:
-        json.dump(dictionary, outfile, indent=4)
-
-
 def main(iso):
     dictionary = {}
 
     api_key = get_api_key()
     dialing_code = get_dialing_code(iso)
-    url = f'api.data247.com/v3.0?key={api_key}&api=CI&phone={dialing_code}'
+    url = f'https://api.data247.com/v3.0?key={api_key}&api=CI&phone={dialing_code}'
 
-    parse(dictionary, url)
+    parse_file(dictionary, url)
     write_json(dictionary)
 
 
