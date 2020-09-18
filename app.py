@@ -13,7 +13,8 @@ def get_api_key():
 
 def get_dialing_code(iso):
     for code, isos in COUNTRY_CODE_TO_REGION_CODE.items():
-        if iso.upper() in isos: return code
+        if iso.upper() in isos:
+            return code
 
 
 def format_number(number):
@@ -51,19 +52,21 @@ def parse(dictionary, url):
 def write_json(dictionary):
     with open('response.json', 'w') as outfile:
         json.dump(dictionary, outfile, indent=4)
-    
+
 
 def main(iso):
     dictionary = {}
-    
+
     api_key = get_api_key()
     dialing_code = get_dialing_code(iso)
-    url = f'https://api.data247.com/v3.0?key={api_key}&api=CI&phone={dialing_code}'
-    
+    url = f'api.data247.com/v3.0?key={api_key}&api=CI&phone={dialing_code}'
+
     parse(dictionary, url)
     write_json(dictionary)
 
 
 if __name__ == '__main__':
-    if len(sys.argv) >= 2: main(sys.argv[1])
-    else: print('ISO parameter is missing!')
+    if len(sys.argv) >= 2:
+        main(sys.argv[1])
+    else:
+        print('ISO parameter is missing!')
