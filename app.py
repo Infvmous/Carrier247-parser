@@ -1,4 +1,5 @@
 import requests
+
 import os
 import sys
 import json
@@ -6,7 +7,9 @@ import json
 from phonenumbers import COUNTRY_CODE_TO_REGION_CODE
 
 from dotenv import load_dotenv
+
 from datetime import date
+from datetime import datetime
 
 
 def get_api_key():
@@ -28,13 +31,21 @@ def unpack(response):
     return response.json()['response']['results'][0]['carrier_name']
 
 
+def get_curr_time():
+    return datetime.now().strftime('%H-%M-%S')
+
+
+def get_curr_date():
+    return date.today()
+
+
 def write_json(dictionary, filename):
     with open(filename + '.json', 'w') as outfile:
         json.dump(dictionary, outfile, indent=4)
 
 
 def gen_filename(iso):
-    return f'{iso}-response-{date.today()}'
+    return f'{iso}-response-{get_curr_date()}({get_curr_time()})'
 
 
 def fill_dictionary(dictionary, carrier_name, phone_number):
