@@ -4,6 +4,8 @@ import os
 from dotenv import load_dotenv
 import sys
 import json
+from datetime import date
+
 
 
 def get_api_key():
@@ -25,9 +27,13 @@ def unpack(response):
     return response.json()['response']['results'][0]['carrier_name']
 
 
-def write_json(dictionary):
-    with open('response.json', 'w') as outfile:
+def write_json(dictionary, filename):
+    with open(filename + '.json', 'w') as outfile:
         json.dump(dictionary, outfile, indent=4)
+
+
+def gen_filename(iso):
+    return f'{iso}-response-{date.today()}'
 
 
 def fill_dictionary(dictionary, carrier_name, phone_number):
@@ -62,7 +68,8 @@ def main(iso):
     url = f'https://api.data247.com/v3.0?key={api_key}&api=CI&phone={dialing_code}'
 
     parse_file(dictionary, url)
-    write_json(dictionary)
+    response_filename = gen_filename(iso)
+    write_json(dictionary, response_filename)
 
 
 if __name__ == '__main__':
