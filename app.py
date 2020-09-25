@@ -1,11 +1,12 @@
 import requests
-from phonenumbers import COUNTRY_CODE_TO_REGION_CODE
 import os
-from dotenv import load_dotenv
 import sys
 import json
-from datetime import date
 
+from phonenumbers import COUNTRY_CODE_TO_REGION_CODE
+
+from dotenv import load_dotenv
+from datetime import date
 
 
 def get_api_key():
