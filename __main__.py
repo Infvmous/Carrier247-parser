@@ -72,7 +72,7 @@ def parse_file(dictionary, url, number_limit):
             print(dictionary)
 
 
-def main(iso, number_limit):
+def main(iso, number_limit=None):
     dictionary = {}
 
     api_key = get_api_key()
@@ -86,7 +86,9 @@ def main(iso, number_limit):
 
 
 if __name__ == '__main__':
-    if len(sys.argv) >= 2:
+    if len(sys.argv) == 2:
+        main(sys.argv[1])
+    elif len(sys.argv) == 3:
         main(sys.argv[1], int(sys.argv[2]))
     else:
         print('ISO parameter is missing!')
