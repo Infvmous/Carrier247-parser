@@ -35,17 +35,13 @@ def get_curr_time():
     return datetime.now().strftime('%H-%M-%S')
 
 
-def get_curr_date():
-    return date.today()
-
-
 def write_json(dictionary, filename):
-    with open(filename + '.json', 'w') as outfile:
+    with open(filename, 'w') as outfile:
         json.dump(dictionary, outfile, indent=4)
 
 
 def gen_filename(iso):
-    return f'{iso}-response-{get_curr_date()}({get_curr_time()})'
+    return f'{iso}-response-{date.today()}({get_curr_time()}).json'
 
 
 def fill_dictionary(dictionary, carrier_name, phone_number):
@@ -62,30 +58,35 @@ def request(url, phone_number):
     return carrier_name
 
 
-def parse_file(dictionary, url):
+def parse_file(dictionary, url, number_limit):
+    counter = 0
     for number in open('numbers.txt', 'r'):
+        if counter == number_limit:
+            break
         formatted_number = format_number(number)
         if formatted_number:
             carrier = request(url, formatted_number)
             dictionary = fill_dictionary(
                 dictionary, carrier, formatted_number)
+            counter += 1
             print(dictionary)
 
 
-def main(iso):
+def main(iso, number_limit):
     dictionary = {}
 
     api_key = get_api_key()
     dialing_code = get_dialing_code(iso)
     url = f'https://api.data247.com/v3.0?key={api_key}&api=CI&phone={dialing_code}'
 
-    parse_file(dictionary, url)
+    parse_file(dictionary, url, number_limit)
     response_filename = gen_filename(iso)
     write_json(dictionary, response_filename)
+    print('\nWritten complete to ' + response_filename)
 
 
 if __name__ == '__main__':
     if len(sys.argv) >= 2:
-        main(sys.argv[1])
+        main(sys.argv[1], int(sys.argv[2]))
     else:
         print('ISO parameter is missing!')
